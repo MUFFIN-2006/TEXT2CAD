@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "solidworks-cad": {
+      "command": "C:\\path\\to\\your\\project\\.venv\\Scripts\\python.exe",
+      "args": [
+        "-m",
+        "solidworks_mcp.server"
+      ],
+      "cwd": "C:\\path\\to\\your\\project",
+      "env": {
+        "SOLIDWORKS_MOCK_MODE": "0",
+        "SOLIDWORKS_HEADLESS": "0"
+      }
+    }
+  }
+}

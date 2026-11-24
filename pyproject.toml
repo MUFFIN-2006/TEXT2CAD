@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "solidworks-mcp"
+version = "1.0.0"
+description = "Local SolidWorks CAD agent and MCP server for parametric modeling."
+readme = "README.md"
+authors = [{ name = "SolidWorks Team" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.0.0",
+    "fastmcp>=0.4.0",
+    "pywin32>=306; platform_system == 'Windows'",
+    "pydantic>=2.0.0",
+    "pillow>=10.0.0",
+    "rich>=13.0.0",
+]
+
+[project.scripts]
+solidworks-mcp = "solidworks_mcp.server:main"
+solidworks-designer = "solidworks_mcp.agent.designer:main"
+
+[project.optional-dependencies]
+standards-index = ["pypdf>=6,<8"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["solidworks_mcp*"]
