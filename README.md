@@ -1,4 +1,5 @@
-# SolidWorks CAD Agent
+## TEXT2CAD
+SolidWorks CAD Agent(on going)
 
 Use the SolidWorks tools directly in a Codex chat, or open the Windows CAD terminal. Both can plan designs with Codex and execute checked operations in SolidWorks.
 
@@ -73,24 +74,6 @@ For a metric hex nut and bolt, enter `make a nut and bolt` and answer the size q
 Type `plan a transfer machine` to discuss the machine without connecting to SolidWorks. Describe each component's geometry, dimensions and placement. In the guided assembly workflow you can also provide existing component paths or request separate output files. Use `build plan` in the same conversation to execute reviewed steps.
 
 Describe a custom outline using lengths and relationships. Codex can derive the sketch points. For example:
-
-```text
-Make a new trapezoidal plate, 50 mm along the bottom, 40 mm along the top, 20 mm tall and 8 mm thick, with the left edge vertical then add a hole
-```
-
-For this request, enter the hole diameter when prompted, for example `6 mm`. The agent chooses the Front Plane, extrudes the outline and places a through hole at (25, 10) mm. For holes, pockets and bosses on a known profile, it checks edge clearance and previously placed features. You can also specify an exact location. Start with `plan` to see the chosen positions before building.
-
-The terminal supports axis-aligned initial component placement and coincident plane mates. The MCP client can also compose the sketch and feature tools, or use native SolidWorks tools for other mate types, orientations and mechanisms. A layout or coincident mate by itself does not verify motion, strength or load capacity. Planning state lasts for the running session.
-
-## Connect an MCP client
-
-The terminal can search the command names supplied with your installed version of SolidWorks. For example, enter `find command loft`, then `run command LoftedBossBase`. Use `find command pattern page 2` for more matches. Searches also cover assembly, drawing, sheet metal and surfacing commands. SolidWorks uses the current selection and active document when you invoke a command. For interactive tools such as Hole Wizard, finish the selections and dimensions in the PropertyManager.
-
-VS Code can start the `solidworks-cad` server from `.vscode/mcp.json`. For another MCP client, copy `mcp_config_example.json` and replace the example project path with your own. If you already have a manually configured server, update its Python module to `solidworks_mcp.server` and restart it.
-
-Call `cad_agent(prompt=...)`. When a design tool returns `needs_input`, show its `message` to the user and send the answer to `cad_agent` with the returned `conversation_id`. This also works for requests started with `ai_design`, `create_live_design` or a `design_*` tool. Keep the same ID to repeat the last hole, boss or pocket with new coordinates. The terminal manages the ID automatically.
-
-MCP clients can also call `find_solidworks_commands(query, offset, limit)` and `start_solidworks_command(name)`. Command availability depends on the document, selection, installed add-ins, and license.
 
 ## Features
 
