@@ -66,8 +66,10 @@ def create_server(mock_mode: bool = False, headless: bool = False) -> FastMCP:
 def main():
     """Command-line runner for the MCP server."""
     parser = argparse.ArgumentParser(description="SolidWorks Autonomous CAD MCP Server")
-    parser.add_argument("--transport", default="stdio", choices=["stdio", "sse", "stream"], help="MCP transport protocol")
-    parser.add_argument("--port", type=int, default=8000, help="Port for SSE transport")
+    parser.add_argument("--transport", default="stdio",
+                        choices=["stdio", "sse", "streamable-http", "stream"],
+                        help="MCP transport protocol")
+    parser.add_argument("--port", type=int, default=8000, help="Port for HTTP transports")
     parser.add_argument("--mock", action="store_true", help="Run in mock/simulation mode without live SolidWorks")
     parser.add_argument("--headless", action="store_true", help="Run SolidWorks hidden in background")
 
@@ -75,11 +77,13 @@ def main():
 
     mcp = create_server(mock_mode=args.mock, headless=args.headless)
 
-    if args.transport == "sse":
-        print(f"Starting SolidWorks MCP SSE Server on http://127.0.0.1:{args.port}...")
-        mcp.run(transport="sse", port=args.port)
-    else:
+    transport = "streamable-http" if args.transport == "stream" else args.transport
+    if transport == "stdio":
         mcp.run(transport="stdio")
+    else:
+        label = "SSE" if transport == "sse" else "Streamable HTTP"
+        print(f"Starting SolidWorks MCP {label} Server on http://127.0.0.1:{args.port}...")
+        mcp.run(transport=transport, port=args.port)
 
 
 if __name__ == "__main__":

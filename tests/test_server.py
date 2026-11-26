@@ -5,14 +5,14 @@ import os
 import unittest
 import asyncio
 from fastmcp import Client
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from pathlib import Path
 
 from solidworks_mcp.config import config
 from solidworks_mcp.com_adapter.mock_adapter import MockSolidWorksAdapter
 from solidworks_mcp.com_adapter.base import CADResult
 from solidworks_mcp.agent.local_agent import LocalCADAgent
-from solidworks_mcp.server import create_server
+from solidworks_mcp.server import create_server, main
 from solidworks_mcp.parametric.prismatic import generate_mounting_bracket, generate_l_bracket, generate_structural_tube
 from solidworks_mcp.parametric.rotational import generate_flange, generate_stepped_shaft, generate_bushing, generate_dowel_pin
 from solidworks_mcp.parametric.enclosures import generate_enclosure_box
@@ -39,6 +39,15 @@ class TestSolidWorksMCP(unittest.TestCase):
         # FastMCP tools
         tools = server._tool_manager.list_tools() if hasattr(server, "_tool_manager") else []
         self.assertIsNotNone(server)
+
+    def test_streamable_http_transport_dispatch(self):
+        for requested_transport in ("streamable-http", "stream"):
+            with self.subTest(transport=requested_transport):
+                server = Mock()
+                with patch("solidworks_mcp.server.create_server", return_value=server), \
+                        patch("sys.argv", ["solidworks-mcp", "--transport", requested_transport, "--port", "8123"]):
+                    main()
+                server.run.assert_called_once_with(transport="streamable-http", port=8123)
 
     def test_mounting_bracket_generator(self):
         """Test parametric mounting bracket creation."""
